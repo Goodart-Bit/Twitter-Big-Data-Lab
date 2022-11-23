@@ -15,6 +15,7 @@ class TweepyClient():
     def get_a_tweet(self, id):
         # Tweepy Response -> Named Tuple BUT we only need 1 value
         self.client.get_tweet(id)[0]
+        self.client.get_liked_tweets()
 
     def __init__(self, bearer_token):
         self.bearer_token = bearer_token
