@@ -20,9 +20,7 @@ def translate(word, dest='en'):
 def format_for_csv(text):
     return text.replace(',',' ').replace("\n",' ') #Data must be cleaned for the CSV to be readed clearly 
 
-def get_tweets_sentiment(tweet_list):
-    data = []
-    columns = ['id', 'tweet', 'sentimiento', 'entidad']
+def get_tweets_sentiment(tweet_list, data=[], columns=['id', 'tweet', 'sentimiento', 'entidad']):
     sia = SentimentIntensityAnalyzer()
     for tweet in tweet_list:
         entity = ''
@@ -58,6 +56,17 @@ def most_popular_words(tweet_list, excluded_words, max=10):
     sorted_words_df = pd.DataFrame.from_dict(dict(desc).items())
     sorted_words_df.columns = ['word','count']
     return sorted_words_df
+
+def save_tweets(tweet_list, data=[], columns=['id', 'tweet', 'entidad', 'dominio']):
+    for tweet in tweet_list:
+        entity = ''
+        domain = ''
+        for context_annotation in tweet.context_annotations:
+            entity = context_annotation['entity']['name']
+            domain = context_annotation['domain']['name']
+        cleaned_text = format_for_csv(tweet)
+        data.append([tweet.id, cleaned_text, entity, domain])
+        return pd.DataFrame(data, columns=columns)
 
 
 #sq = "covid (azitromicina OR ivermectina OR dioxido) -is:retweet lang:es"
